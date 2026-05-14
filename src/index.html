@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="MedChain - Système décentralisé de gestion des dossiers médicaux basé sur la blockchain Ethereum">
+    <title>MedChain | Connexion Patient</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="no-sidebar">
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader-content">
+            <div class="pulse-ring"></div>
+            <div class="loader-icon">🏥</div>
+            <h2>MedChain</h2>
+            <p>Connexion à la blockchain...</p>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <main class="main-content">
+        <header class="main-header">
+            <div class="header-left">
+                <h2>Connexion Patient</h2>
+            </div>
+            <div class="header-right">
+                <div class="blockchain-info">
+                    <div class="info-chip">
+                        <span class="chip-icon">⛓️</span>
+                        <span>Bloc: <strong id="block-number">0</strong></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="page active">
+            <div class="welcome-container">
+                <div class="welcome-card glass-card">
+                    <div class="welcome-icon">🔗</div>
+                    <h2>Bienvenue sur MedChain</h2>
+                    <p>Système décentralisé de gestion des dossiers médicaux sécurisé par la blockchain Ethereum.</p>
+
+                    <div class="welcome-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🔒</div>
+                            <h4>Sécurisé</h4>
+                            <p>Données protégées par cryptographie</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🌐</div>
+                            <h4>Décentralisé</h4>
+                            <p>Aucune autorité centrale</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">👤</div>
+                            <h4>Patient-Centré</h4>
+                            <p>Le patient contrôle ses données</p>
+                        </div>
+                    </div>
+
+                    <div class="register-section" id="login-section">
+                        <h3>🔐 Connexion Patient</h3>
+                        <p class="register-hint">Entrez vos informations personnelles pour accéder à votre espace patient.
+                            Ces données doivent correspondre à celles enregistrées par l'administrateur.</p>
+                        <form id="login-patient-form" class="form-grid">
+                            <div class="form-group">
+                                <label for="login-name">Nom Complet</label>
+                                <input type="text" id="login-name" placeholder="Ex: Youssef El Amrani" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-dob">Date de Naissance</label>
+                                <input type="date" id="login-dob" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="login-blood">Groupe Sanguin</label>
+                                <select id="login-blood" required>
+                                    <option value="">Sélectionner...</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <span class="btn-icon">🔑</span>
+                                Se Connecter
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <span id="account-balance" style="display:none;">0.00</span>
+    <small id="contract-address" style="display:none;"></small>
+    <span id="network-dot" class="status-dot" style="display:none;"></span>
+    <span id="network-text" style="display:none;"></span>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="js/web3-init.js"></script>
+    <script>
+        const EntryApp = {
+            init: async function () {
+                await MedChain.init({
+                    onReady: async () => {
+                        const form = document.getElementById("login-patient-form");
+                        if (form) {
+                            form.addEventListener("submit", async (e) => {
+                                e.preventDefault();
+                                await EntryApp.loginPatient();
+                            });
+                        }
+                    },
+                });
+            },
+
+            loginPatient: async function () {
+                const name = document.getElementById("login-name").value.trim();
+                const dob = document.getElementById("login-dob").value.trim();
+                const blood = document.getElementById("login-blood").value;
+
+                if (!name || !dob || !blood) {
+                    return MedChain.showToast("Veuillez remplir tous les champs", "error");
+                }
+
+                try {
+                    MedChain.showToast("Vérification en cours...", "info");
+
+                    const patientCount = await MedChain.contract.methods.getPatientCount().call();
+
+                    for (let i = 0; i < patientCount; i++) {
+                        const addr = await MedChain.contract.methods.getPatientAddress(i).call();
+                        const info = await MedChain.contract.methods.getPatientInfo(addr).call();
+
+                        if (
+                            info.name.toLowerCase() === name.toLowerCase() &&
+                            info.dateOfBirth === dob &&
+                            info.bloodGroup === blood
+                        ) {
+                            sessionStorage.setItem("selectedAccount", addr);
+                            MedChain.showToast(`Bienvenue ${info.name} ! Redirection...`, "success");
+
+                            setTimeout(() => {
+                                window.location.href = "/patient";
+                            }, 1200);
+                            return;
+                        }
+                    }
+
+
+                    MedChain.showToast("Identifiants incorrects. Vérifiez vos informations ou contactez l'administrateur.", "error");
+
+                } catch (err) {
+                    console.error(err);
+                    MedChain.showToast("Erreur: " + MedChain.extractError(err), "error");
+                }
+            },
+        };
+        window.addEventListener("DOMContentLoaded", () => EntryApp.init());
+    </script>
+</body>
+
+</html>

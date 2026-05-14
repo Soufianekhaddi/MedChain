@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MedChain - Panneau d'administration">
+    <title>MedChain | Administration</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader-content">
+            <div class="pulse-ring"></div>
+            <div class="loader-icon">🏥</div>
+            <h2>MedChain</h2>
+            <p>Connexion à la blockchain...</p>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>MedChain</h1>
+                    <span class="logo-subtitle">Blockchain Médicale</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-account">
+            <div class="account-selector">
+                <label for="account-select">Compte Actif</label>
+                <select id="account-select">
+                    <option value="">Chargement...</option>
+                </select>
+            </div>
+            <div class="account-role">
+                <span id="role-badge" class="role-badge role-admin">Administrateur</span>
+            </div>
+            <div class="account-balance">
+                <span class="balance-label">Solde ETH</span>
+                <span id="account-balance" class="balance-value">0.00</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="/admin" class="active"><span class="nav-icon">📊</span>Tableau de Bord</a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="network-status">
+                <span id="network-dot" class="status-dot"></span>
+                <span id="network-text">Ganache Local</span>
+            </div>
+            <div class="contract-info">
+                <small id="contract-address">Contrat: Non déployé</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="main-header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <h2>Administration</h2>
+            </div>
+            <div class="header-right">
+                <div class="blockchain-info">
+                    <div class="info-chip">
+                        <span class="chip-icon">⛓️</span>
+                        <span>Bloc: <strong id="block-number">0</strong></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="page active">
+            <div class="stats-row">
+                <div class="stat-card glass-card">
+                    <div class="stat-icon stat-blue">👨‍⚕️</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-doctors">0</span>
+                        <span class="stat-label">Médecins</span>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon stat-green">👥</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-patients">0</span>
+                        <span class="stat-label">Patients</span>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon stat-purple">📋</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-records">0</span>
+                        <span class="stat-label">Dossiers</span>
+                    </div>
+                </div>
+                <div class="stat-card glass-card">
+                    <div class="stat-icon stat-teal">⛓️</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-blocks">0</span>
+                        <span class="stat-label">Blocs</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>📋 Enregistrer un Médecin</h3>
+                </div>
+                <form id="register-doctor-form" class="form-grid">
+                    <div class="form-group">
+                        <label for="doc-address">Adresse Ethereum du Médecin</label>
+                        <select id="doc-address" required>
+                            <option value="">Sélectionner un compte...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="doc-name">Nom Complet</label>
+                        <input type="text" id="doc-name" placeholder="Ex: Dr. Ahmed Benali" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="doc-specialty">Spécialité</label>
+                        <select id="doc-specialty" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="Cardiologie">Cardiologie</option>
+                            <option value="Dermatologie">Dermatologie</option>
+                            <option value="Neurologie">Neurologie</option>
+                            <option value="Pédiatrie">Pédiatrie</option>
+                            <option value="Chirurgie">Chirurgie</option>
+                            <option value="Médecine Générale">Médecine Générale</option>
+                            <option value="Ophtalmologie">Ophtalmologie</option>
+                            <option value="Radiologie">Radiologie</option>
+                            <option value="Gynécologie">Gynécologie</option>
+                            <option value="Orthopédie">Orthopédie</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="doc-hospital">Hôpital / Clinique</label>
+                        <input type="text" id="doc-hospital" placeholder="Ex: CHU Mohammed VI" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-icon">✅</span>
+                        Enregistrer le Médecin
+                    </button>
+                </form>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>👤 Enregistrer un Patient</h3>
+                </div>
+                <form id="register-patient-form" class="form-grid">
+                    <div class="form-group">
+                        <label for="pat-address">Adresse Ethereum du Patient</label>
+                        <select id="pat-address" required>
+                            <option value="">Sélectionner un compte...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pat-name">Nom Complet</label>
+                        <input type="text" id="pat-name" placeholder="Ex: Youssef El Amrani" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pat-dob">Date de Naissance</label>
+                        <input type="date" id="pat-dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pat-blood">Groupe Sanguin</label>
+                        <select id="pat-blood" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-icon">✅</span>
+                        Enregistrer le Patient
+                    </button>
+                </form>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>👨‍⚕️ Médecins Enregistrés</h3>
+                    <button class="btn btn-sm btn-outline" onclick="AdminApp.loadDoctorsList()">🔄 Rafraîchir</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Nom</th><th>Spécialité</th><th>Hôpital</th><th>Adresse</th><th>Date d'inscription</th>
+                            </tr>
+                        </thead>
+                        <tbody id="doctors-tbody">
+                            <tr class="empty-row"><td colspan="6">Aucun médecin enregistré</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>👥 Patients Enregistrés</h3>
+                    <button class="btn btn-sm btn-outline" onclick="AdminApp.loadPatientsList()">🔄 Rafraîchir</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th><th>Nom</th><th>Date de naissance</th><th>Groupe sanguin</th><th>Adresse</th><th>Date d'inscription</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patients-tbody">
+                            <tr class="empty-row"><td colspan="6">Aucun patient enregistré</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="js/web3-init.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

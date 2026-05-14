@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MedChain - Mon Espace Patient">
+    <title>MedChain | Mon Espace Patient</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader-content">
+            <div class="pulse-ring"></div>
+            <div class="loader-icon">🏥</div>
+            <h2>MedChain</h2>
+            <p>Connexion à la blockchain...</p>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>MedChain</h1>
+                    <span class="logo-subtitle">Blockchain Médicale</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-account">
+            <div class="account-selector">
+                <label for="account-select">Compte Actif</label>
+                <select id="account-select">
+                    <option value="">Chargement...</option>
+                </select>
+            </div>
+            <div class="account-role">
+                <span id="role-badge" class="role-badge role-patient">Patient</span>
+            </div>
+            <div class="account-balance">
+                <span class="balance-label">Solde ETH</span>
+                <span id="account-balance" class="balance-value">0.00</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="/patient" class="active"><span class="nav-icon">📊</span>Mon Espace</a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="network-status">
+                <span id="network-dot" class="status-dot"></span>
+                <span id="network-text">Ganache Local</span>
+            </div>
+            <div class="contract-info">
+                <small id="contract-address">Contrat: Non déployé</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="main-header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <h2>Mon Espace Patient</h2>
+            </div>
+            <div class="header-right">
+                <div class="blockchain-info">
+                    <div class="info-chip">
+                        <span class="chip-icon">⛓️</span>
+                        <span>Bloc: <strong id="block-number">0</strong></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="page active">
+            <div class="profile-card glass-card">
+                <div class="profile-avatar patient-avatar">👤</div>
+                <div class="profile-info">
+                    <h3 id="patient-name">Patient —</h3>
+                    <span class="profile-detail" id="patient-dob">Né(e) le: —</span>
+                    <span class="profile-detail" id="patient-blood">Groupe sanguin: —</span>
+                </div>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>🔐 Gestion des Accès</h3>
+                </div>
+                <div class="access-management">
+                    <div class="access-form">
+                        <div class="form-group">
+                            <label for="grant-doctor">Accorder l'accès à un médecin</label>
+                            <div class="input-group">
+                                <select id="grant-doctor">
+                                    <option value="">Sélectionner un médecin...</option>
+                                </select>
+                                <button class="btn btn-success" onclick="PatientApp.grantAccess()">
+                                    ✅ Accorder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="access-list">
+                        <h4>Médecins autorisés</h4>
+                        <div id="access-list-container">
+                            <div class="empty-state small">
+                                <p>Aucun médecin n'a accès à vos dossiers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>📋 Mes Dossiers Médicaux</h3>
+                    <button class="btn btn-sm btn-outline" onclick="PatientApp.loadMyRecords()">🔄 Rafraîchir</button>
+                </div>
+                <div id="patient-records-container" class="records-container">
+                    <div class="empty-state">
+                        <span class="empty-icon">📋</span>
+                        <p>Aucun dossier médical trouvé</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>📜 Historique des Accès</h3>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Médecin</th>
+                                <th>Accordé le</th>
+                                <th>Révoqué le</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody id="access-log-tbody">
+                            <tr class="empty-row">
+                                <td colspan="4">Aucun historique d'accès</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="js/web3-init.js"></script>
+    <script src="js/patient.js"></script>
+</body>
+
+</html>

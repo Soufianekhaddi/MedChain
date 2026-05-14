@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MedChain - Espace Médecin">
+    <title>MedChain | Espace Médecin</title>
+    <link rel="icon" href="icon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loader-content">
+            <div class="pulse-ring"></div>
+            <div class="loader-icon">🏥</div>
+            <h2>MedChain</h2>
+            <p>Connexion à la blockchain...</p>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>MedChain</h1>
+                    <span class="logo-subtitle">Blockchain Médicale</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-account">
+            <div class="account-selector">
+                <label for="account-select">Compte Actif</label>
+                <select id="account-select">
+                    <option value="">Chargement...</option>
+                </select>
+            </div>
+            <div class="account-role">
+                <span id="role-badge" class="role-badge role-doctor">Médecin</span>
+            </div>
+            <div class="account-balance">
+                <span class="balance-label">Solde ETH</span>
+                <span id="account-balance" class="balance-value">0.00</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="/doctor" class="active"><span class="nav-icon">📊</span>Tableau de Bord</a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="network-status">
+                <span id="network-dot" class="status-dot"></span>
+                <span id="network-text">Ganache Local</span>
+            </div>
+            <div class="contract-info">
+                <small id="contract-address">Contrat: Non déployé</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="main-header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <span></span><span></span><span></span>
+                </button>
+                <h2>Espace Médecin</h2>
+            </div>
+            <div class="header-right">
+                <div class="blockchain-info">
+                    <div class="info-chip">
+                        <span class="chip-icon">⛓️</span>
+                        <span>Bloc: <strong id="block-number">0</strong></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="page active">
+            <div class="profile-card glass-card">
+                <div class="profile-avatar doctor-avatar">👨‍⚕️</div>
+                <div class="profile-info">
+                    <h3 id="doctor-name">Dr. —</h3>
+                    <span class="profile-detail" id="doctor-specialty">Spécialité: —</span>
+                    <span class="profile-detail" id="doctor-hospital">Hôpital: —</span>
+                </div>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>📝 Ajouter un Dossier Médical</h3>
+                </div>
+                <form id="add-record-form" class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="record-patient">Patient</label>
+                        <select id="record-patient" required>
+                            <option value="">Sélectionner un patient...</option>
+                        </select>
+                        <small class="form-hint">Seuls les patients qui vous ont accordé l'accès apparaissent</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="record-diagnosis">Diagnostic</label>
+                        <input type="text" id="record-diagnosis" placeholder="Ex: Hypertension artérielle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="record-treatment">Traitement</label>
+                        <input type="text" id="record-treatment" placeholder="Ex: Traitement médicamenteux" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="record-medication">Médicaments</label>
+                        <input type="text" id="record-medication" placeholder="Ex: Amlodipine 5mg" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="record-notes">Notes</label>
+                        <textarea id="record-notes" rows="3" placeholder="Notes additionnelles..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-icon">💾</span>
+                        Enregistrer le Dossier
+                    </button>
+                </form>
+            </div>
+
+            <div class="content-card glass-card">
+                <div class="card-header">
+                    <h3>📂 Dossiers des Patients</h3>
+                    <div class="header-actions">
+                        <select id="doctor-view-patient" class="inline-select">
+                            <option value="">Choisir un patient...</option>
+                        </select>
+                        <button class="btn btn-sm btn-outline" onclick="DoctorApp.loadPatientRecordsForDoctor()">📄 Voir
+                            Dossiers</button>
+                    </div>
+                </div>
+                <div id="doctor-records-container" class="records-container">
+                    <div class="empty-state">
+                        <span class="empty-icon">📂</span>
+                        <p>Sélectionnez un patient pour voir ses dossiers médicaux</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <script src="js/web3-init.js"></script>
+    <script src="js/doctor.js"></script>
+</body>
+
+</html>
