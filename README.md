@@ -26,6 +26,7 @@
 ## 📋 Table des Matières
 
 - [Présentation](#-présentation)
+- [Captures d'écran](#-captures-décran)
 - [Fonctionnalités](#-fonctionnalités)
 - [Architecture](#-architecture)
 - [Stack Technologique](#-stack-technologique)
@@ -60,6 +61,86 @@ MedChain répond à ces défis grâce à un smart contract Ethereum qui :
 - ✅ **Décentralise** le stockage des données
 - ✅ Donne au patient le **contrôle total** sur les permissions d'accès
 - ✅ Enregistre un **journal d'audit** complet de tous les accès
+
+---
+
+## 📸 Captures d'écran
+
+### 📐 Diagrammes d'Architecture
+
+<p align="center">
+  <img src="screenshots/graphe 1.png" alt="Architecture générale du système" width="700" />
+  <br><em>Architecture générale — Frontend → Express.js → Web3.js → Blockchain Ethereum</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/graphe de flux.png" alt="Diagramme de séquence des interactions" width="700" />
+  <br><em>Diagramme de séquence — Flux complet : déploiement, enregistrement, accès et création de dossier</em>
+</p>
+
+### 🔐 Page de Connexion Patient
+
+Interface d'authentification sécurisée permettant aux patients de se connecter via leurs informations personnelles (nom, date de naissance, groupe sanguin).
+
+<p align="center">
+  <img src="screenshots/login.png" alt="Page de connexion patient MedChain" width="800" />
+</p>
+
+### 👨‍💼 Panel Administration
+
+Tableau de bord administrateur avec statistiques en temps réel, enregistrement des médecins et supervision complète des utilisateurs.
+
+<p align="center">
+  <img src="screenshots/admin-dash.png" alt="Administration - Tableau de bord et enregistrement médecin" width="800" />
+</p>
+
+<p align="center">
+  <img src="screenshots/admin-fonctionalities.png" alt="Administration - Liste des médecins et patients enregistrés" width="800" />
+</p>
+
+### 👨‍⚕️ Espace Médecin
+
+Interface complète pour les médecins : profil professionnel, formulaire d'ajout de dossiers médicaux et consultation des dossiers patients.
+
+<p align="center">
+  <img src="screenshots/med-dash.png" alt="Espace médecin - Profil et formulaire d'ajout" width="800" />
+</p>
+
+<p align="center">
+  <img src="screenshots/med-fonctionalities.png" alt="Espace médecin - Consultation des dossiers patients" width="800" />
+</p>
+
+### 🧑‍🤝‍🧑 Espace Patient
+
+Tableau de bord patient avec gestion granulaire des accès, visualisation des dossiers médicaux et historique complet des permissions.
+
+<p align="center">
+  <img src="screenshots/pat-dash.png" alt="Espace patient - Gestion des accès et dossiers médicaux" width="800" />
+</p>
+
+<p align="center">
+  <img src="screenshots/pat-fonctionalities.png" alt="Espace patient - Historique des accès et audit trail" width="800" />
+</p>
+
+### ⛓️ Blockchain — Ganache
+
+Visualisation de la blockchain locale Ganache : comptes Ethereum, blocs minés, contrat déployé et événements émis.
+
+<p align="center">
+  <img src="screenshots/ganache-accounts.png" alt="Ganache - Comptes Ethereum et balances" width="800" />
+</p>
+
+<p align="center">
+  <img src="screenshots/ganach-blocks.png" alt="Ganache - Blocs minés et transactions" width="800" />
+</p>
+
+<p align="center">
+  <img src="screenshots/ganach-contracts.png" alt="Ganache - Smart contract MedicalRecords déployé" width="800" />
+</p>
+
+<p align="center">
+  <img src="screenshots/ganach-events.png" alt="Ganache - Événements émis (DoctorRegistered, PatientRegistered, AccessGranted, RecordAdded)" width="800" />
+</p>
 
 ---
 
@@ -295,6 +376,20 @@ MedChain/
 │   └── MedicalRecords.sol      # Smart contract Solidity
 ├── migrations/
 │   └── 1_deploy_contracts.js   # Script de déploiement Truffle
+├── screenshots/                # Captures d'écran de l'application
+│   ├── admin-dash.png
+│   ├── admin-fonctionalities.png
+│   ├── ganach-blocks.png
+│   ├── ganach-contracts.png
+│   ├── ganach-events.png
+│   ├── ganache-accounts.png
+│   ├── graphe 1.png
+│   ├── graphe de flux.png
+│   ├── login.png
+│   ├── med-dash.png
+│   ├── med-fonctionalities.png
+│   ├── pat-dash.png
+│   └── pat-fonctionalities.png
 ├── src/
 │   ├── css/
 │   │   └── style.css           # Styles globaux (glassmorphism, animations)
